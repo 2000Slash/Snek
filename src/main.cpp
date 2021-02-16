@@ -2,6 +2,14 @@
 #include <SDL2/SDL_image.h>
 #include "Snek.hpp"
 #include <iostream>
+
+#ifdef __SWITCH__
+#include <switch.h>
+void changeFolder() {
+    romfsInit();
+    chdir("romfs:/");
+}
+#endif
  
 SDL_Window* createWindow() { 
     SDL_Init(SDL_INIT_VIDEO);
@@ -9,8 +17,11 @@ SDL_Window* createWindow() {
     return SDL_CreateWindow("Snek",SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
 }
 
-int main(int argc, char ** argv)
+int main(int argc, char **argv)
 {
+    #ifdef __SWITCH__
+    changeFolder()
+    #endif
     SDL_Window* window = createWindow();
     SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
     Snek snek(renderer);

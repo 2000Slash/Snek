@@ -16,7 +16,7 @@ void Snek::update() {
 Snek::Snek(SDL_Renderer* renderer) {
     x = 0;
     y = 0;
-    surface = IMG_Load("Snek.png");
+    surface = IMG_Load("data/Snek.png");
     texture = SDL_CreateTextureFromSurface(renderer, surface);
 }
 
