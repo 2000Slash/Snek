@@ -1,8 +1,8 @@
 #include "GameObject.hpp"
 
-class Snek : GameObject {
+class Snek : public GameObject {
     private:
-        int direction;
+        int direction = 2;
         int x, y;
         SDL_Texture* texture;
         SDL_Surface* surface;

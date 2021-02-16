@@ -10,7 +10,20 @@ void Snek::render(SDL_Renderer *renderer) {
 }
 
 void Snek::update() {
-    x += 2;
+    switch(direction) {
+        case 0:
+            y -= 2;
+            break;
+        case 1:
+            x += 2;
+            break;
+        case 2:
+            y += 2;
+            break;
+        case 3:
+            x -= 2;
+            break;
+    }
 }
 
 Snek::Snek(SDL_Renderer* renderer) {

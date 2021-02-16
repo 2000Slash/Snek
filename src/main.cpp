@@ -2,6 +2,7 @@
 #include <SDL2/SDL_image.h>
 #include "Snek.hpp"
 #include <iostream>
+#include "ObjectManager.hpp"
 
 #ifdef __SWITCH__
 #include <switch.h>
@@ -23,12 +24,12 @@ int main(int argc, char **argv)
     changeFolder()
     #endif
     SDL_Window* window = createWindow();
-    SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
-    Snek snek(renderer);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+    ObjectManager manager(renderer);
     
     SDL_Event event;
     bool quit = false;
-    double frameMs = 1000 / 30;
+    double frameMs = 1000 / 60;
     while (!quit)
     {
         double startMs = SDL_GetTicks();
@@ -42,8 +43,8 @@ int main(int argc, char **argv)
         }
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-        snek.render(renderer);
-        snek.update();
+        manager.render(renderer);
+        manager.update();
         SDL_RenderPresent(renderer);
         double endMs = SDL_GetTicks();
         double delayMs = frameMs - (endMs - startMs);
