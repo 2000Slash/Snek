@@ -1,10 +1,11 @@
+#pragma once
 #include "GameObject.hpp"
 #include <vector>
 
 class Snek : public GameObject {
     private:
         int x, y;
-        int direction;
+        int direction, nextDirection;
         void renderSegment(int, int, SDL_Renderer*);
         void updateTail();
         void move();
@@ -18,5 +19,6 @@ class Snek : public GameObject {
         Snek(SDL_Renderer*);
         ~Snek();
         void update() override;
+        void changeDirection(int);
         void render(SDL_Renderer *) override;
 };

@@ -37,6 +37,11 @@ int main(int argc, char **argv)
         while (SDL_PollEvent(&event)) {
             switch (event.type)
             {
+                case SDL_KEYDOWN: {
+                    SDL_Keysym key = event.key.keysym;
+                    manager.handleKey(key.sym);
+                    break;
+                }
                 case SDL_QUIT:
                     quit = true;
                     break;
