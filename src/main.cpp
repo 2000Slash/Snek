@@ -3,6 +3,7 @@
 #include "Snek.hpp"
 #include <iostream>
 #include "ObjectManager.hpp"
+#include "Defaults.h"
 
 #ifdef __SWITCH__
 #include <switch.h>
@@ -15,7 +16,7 @@ void changeFolder() {
 SDL_Window* createWindow() { 
     SDL_Init(SDL_INIT_VIDEO);
     IMG_Init(IMG_INIT_PNG);
-    return SDL_CreateWindow("Snek",SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
+    return SDL_CreateWindow("Snek",SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, 0);
 }
 
 int main(int argc, char **argv)

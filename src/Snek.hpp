@@ -1,11 +1,19 @@
 #include "GameObject.hpp"
+#include <vector>
 
 class Snek : public GameObject {
     private:
-        int direction = 2;
         int x, y;
-        SDL_Texture* texture;
-        SDL_Surface* surface;
+        int direction;
+        void renderSegment(int, int, SDL_Renderer*);
+        void updateTail();
+        void move();
+        struct segment;
+        std::vector<segment> segments;
+        SDL_Texture* headTexture;
+        SDL_Surface* headSurface;
+        SDL_Texture* segmentTexture;
+        SDL_Surface* segmentSurface;
     public:
         Snek(SDL_Renderer*);
         ~Snek();
