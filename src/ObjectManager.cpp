@@ -14,6 +14,12 @@ void ObjectManager::update() {
     for(GameObject* object: gameObjects) {
         object->update();
     }
+
+    if(apple->getCoords() == snek->getCoords()) {
+        SDL_Event event;
+        event.type = SDL_QUIT;
+        SDL_PushEvent(&event);
+    }
 }
 
 void ObjectManager::drawBackground(SDL_Renderer* renderer) {
@@ -53,5 +59,7 @@ void ObjectManager::addObject(GameObject* object) {
 
 ObjectManager::ObjectManager(SDL_Renderer* renderer) {
     snek = new Snek(renderer);
+    apple = new Apple(renderer, 5, 5);
+    addObject(apple);
     addObject(snek);
 }
