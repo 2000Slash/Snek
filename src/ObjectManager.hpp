@@ -29,5 +29,6 @@ class ObjectManager {
         void drawGrid(SDL_Renderer*);
         bool update();
         void handleKey(SDL_Keycode);
+        void handleButton(int);
         void addObject(GameObject*);
 };

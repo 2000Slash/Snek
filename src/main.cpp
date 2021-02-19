@@ -16,6 +16,11 @@ void changeFolder() {
  
 SDL_Window* createWindow() { 
     SDL_Init(SDL_INIT_VIDEO);
+#ifdef __SWITCH__
+    SDL_InitSubSystem(SDL_INIT_JOYSTICK);
+    SDL_JoystickEventState(SDL_ENABLE);
+    SDL_JoystickOpen(0);
+#endif
     IMG_Init(IMG_INIT_PNG);
     TTF_Init();
     return SDL_CreateWindow("Snek",SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, 0);
@@ -40,11 +45,19 @@ int main(int argc, char **argv)
         while (SDL_PollEvent(&event)) {
             switch (event.type)
             {
+#ifdef __SWITCH__
+                case SDL_JOYBUTTONDOWN: {
+                    int button = event.jbutton.button;
+                    manager.handleButton(button);
+                    break;
+                }
+#else
                 case SDL_KEYDOWN: {
                     SDL_Keysym key = event.key.keysym;
                     manager.handleKey(key.sym);
                     break;
                 }
+#endif
                 case SDL_QUIT:
                     quit = true;
                     break;

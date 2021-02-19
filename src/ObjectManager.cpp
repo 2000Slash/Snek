@@ -4,6 +4,16 @@
 #include <iostream>
 #include <algorithm>
 
+#define JOY_A     0
+#define JOY_B     1
+#define JOY_X     2
+#define JOY_Y     3
+#define JOY_PLUS  10
+#define JOY_LEFT  12
+#define JOY_UP    13
+#define JOY_RIGHT 14
+#define JOY_DOWN  15
+
 void ObjectManager::render(SDL_Renderer* renderer) {
     drawBackground(renderer);
     for(GameObject* object: gameObjects) {
@@ -100,6 +110,23 @@ void ObjectManager::handleKey(SDL_Keycode code) {
     }
 }
 
+void ObjectManager::handleButton(int button) {
+    switch(button) {
+        case JOY_UP:
+            snek->changeDirection(0);
+            break;
+        case JOY_RIGHT:
+            snek->changeDirection(1);
+            break;
+        case JOY_DOWN:
+            snek->changeDirection(2);
+            break;
+        case JOY_LEFT:
+            snek->changeDirection(3);
+            break;
+    }
+}
+
 void ObjectManager::addObject(GameObject* object) {
     gameObjects.push_back(object);
 }
@@ -157,7 +184,5 @@ ObjectManager::ObjectManager(SDL_Renderer* renderer) {
 }
 
 ObjectManager::~ObjectManager() {
-    delete snek;
-    delete apple;
     SDL_DestroyTexture(backgroundTexture);
 }
