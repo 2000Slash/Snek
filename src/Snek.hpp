@@ -15,7 +15,6 @@ class Snek : public GameObject {
         void move();
         bool checkSelfCollision();
         struct segment;
-        struct cell;
         std::vector<cell> cells;
         std::vector<segment> segments;
         SDL_Texture* headTexture;
@@ -27,6 +26,7 @@ class Snek : public GameObject {
     public:
         Snek(SDL_Renderer*);
         ~Snek();
+        std::vector<cell> getCollisionCells();
         void update() override;
         void increaseTail();
         void changeDirection(int);

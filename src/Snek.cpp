@@ -8,9 +8,9 @@ struct Snek::segment {
     int life;
 };
 
-struct Snek::cell {
-    int x, y;
-};
+std::vector<GameObject::cell> Snek::getCollisionCells() {
+    return cells;
+}
 
 // iterate through all segments and draw them to the screen
 void Snek::render(SDL_Renderer *renderer) {

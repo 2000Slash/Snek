@@ -1,5 +1,6 @@
 #include "GameObject.hpp"
 #include <tuple>
+#include <vector>
 
 class Apple : public GameObject {
     private:
@@ -7,7 +8,7 @@ class Apple : public GameObject {
         SDL_Surface* appleSurface;
         int x, y;
     public:
-        void reposition();
+        void reposition(std::vector<cell>);
         void render(SDL_Renderer *) override;
         void update() override;
         Apple(SDL_Renderer *, int, int);

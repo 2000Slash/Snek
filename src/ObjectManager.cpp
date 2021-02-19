@@ -2,6 +2,7 @@
 #include "Snek.hpp"
 #include "Defaults.h"
 #include <iostream>
+#include <algorithm>
 
 void ObjectManager::render(SDL_Renderer* renderer) {
     drawBackground(renderer);
@@ -15,19 +16,42 @@ void ObjectManager::update() {
         object->update();
     }
 
+    std::tuple<int, int> coords = snek->getCoords();
+    int sx, sy;
+    sx = std::get<0>(coords);
+    sy = std::get<1>(coords);
+
+    if(sx >= WIDTH/SPRITE_WIDTH || sx < 0 || sy >= HEIGHT/SPRITE_HEIGHT || sy < 0) {
+        SDL_Event event;
+        event.type = SDL_QUIT;
+        SDL_PushEvent(&event);
+    }
+
     if(apple->getCoords() == snek->getCoords()) {
-        apple->reposition();
+        std::vector<GameObject::cell> snekCells = snek->getCollisionCells();
+        std::vector<GameObject::cell> tmpCells(allCells);
+
+        for(GameObject::cell c : snekCells) {
+            tmpCells.erase(std::remove(tmpCells.begin(), tmpCells.end(), c));
+        }
+        apple->reposition(tmpCells);
         snek->increaseTail();
     }
 }
 
 void ObjectManager::drawBackground(SDL_Renderer* renderer) {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-    for(int x = 0; x < 19; x++) {
-        SDL_RenderDrawLine(renderer, x*SPRITE_WIDTH, 0, x*SPRITE_WIDTH, HEIGHT);
+    if (displayGrid) {
+        drawGrid(renderer);
     }
-    for(int y = 0; y < 11; y++) {
-        SDL_RenderDrawLine(renderer, 0, y*SPRITE_HEIGHT, WIDTH, y*SPRITE_HEIGHT);
+}
+
+void ObjectManager::drawGrid(SDL_Renderer* renderer) {
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+    for(int x = 0; x < WIDTH/SPRITE_WIDTH; x++) {
+        SDL_RenderDrawLine(renderer, x*SPRITE_WIDTH, 0, x*SPRITE_WIDTH, HEIGHT/SPRITE_HEIGHT*SPRITE_HEIGHT);
+    }
+    for(int y = 0; y < HEIGHT/SPRITE_HEIGHT; y++) {
+        SDL_RenderDrawLine(renderer, 0, y*SPRITE_HEIGHT, WIDTH/SPRITE_WIDTH*SPRITE_WIDTH, y*SPRITE_HEIGHT);
     }
 }
  
@@ -61,4 +85,15 @@ ObjectManager::ObjectManager(SDL_Renderer* renderer) {
     apple = new Apple(renderer, 5, 5);
     addObject(apple);
     addObject(snek);
+
+    int gridWidth = WIDTH/SPRITE_WIDTH;
+    int gridHeight = HEIGHT/SPRITE_HEIGHT;
+    for(int x = 0; x < gridWidth; x++) {
+        for(int y = 0; y < gridHeight; y++) {
+            GameObject::cell c;
+            c.x = x;
+            c.y = y;
+            allCells.push_back(c);
+        }
+    }
 }

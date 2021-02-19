@@ -14,9 +14,10 @@ void Apple::update() {
 
 }
 
-void Apple::reposition() {
-    x = rand() % 18;
-    y = rand() % 10;
+void Apple::reposition(std::vector<GameObject::cell> freeCells) {
+    cell c = freeCells.at(rand()%freeCells.size());
+    x = c.x;
+    y = c.y;
 }
 
 Apple::Apple(SDL_Renderer* renderer, int pX, int pY) {

@@ -22,7 +22,7 @@ SDL_Window* createWindow() {
 int main(int argc, char **argv)
 {
     #ifdef __SWITCH__
-    changeFolder()
+    changeFolder();
     #endif
     SDL_Window* window = createWindow();
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
