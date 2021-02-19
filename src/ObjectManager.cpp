@@ -16,9 +16,8 @@ void ObjectManager::update() {
     }
 
     if(apple->getCoords() == snek->getCoords()) {
-        SDL_Event event;
-        event.type = SDL_QUIT;
-        SDL_PushEvent(&event);
+        apple->reposition();
+        snek->increaseTail();
     }
 }
 

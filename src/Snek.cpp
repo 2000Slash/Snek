@@ -1,7 +1,6 @@
 #include "Snek.hpp"
 #include <iostream>
 #include <cmath>
-#include "Defaults.h"
 #include <cmath>
 
 struct Snek::segment {
@@ -27,13 +26,15 @@ void Snek::render(SDL_Renderer *renderer) {
     dstrect.h = SPRITE_HEIGHT;
     SDL_RenderCopyEx(renderer, headTexture, NULL, &dstrect, (direction-1)*90, NULL, SDL_FLIP_NONE);
 
-    for(cell c: cells) {
-        SDL_Rect dstrect;
-        dstrect.x = c.x*70;
-        dstrect.y = c.y*70;
-        dstrect.w = SPRITE_WIDTH;
-        dstrect.h = SPRITE_HEIGHT;
-        SDL_RenderCopy(renderer, debugTexture, NULL, &dstrect);
+    if (debug) {
+        for(cell c: cells) {
+            SDL_Rect dstrect;
+            dstrect.x = c.x*70;
+            dstrect.y = c.y*70;
+            dstrect.w = SPRITE_WIDTH;
+            dstrect.h = SPRITE_HEIGHT;
+            SDL_RenderCopy(renderer, debugTexture, NULL, &dstrect);
+        }
     }
 }
 
@@ -96,16 +97,16 @@ bool Snek::checkSelfCollision() {
 void Snek::move() {
     switch(direction) {
         case 0:
-            y-=SPEED;
+            y-=speed;
             break;
         case 1:
-            x+=SPEED;
+            x+=speed;
             break;
         case 2:
-            y+=SPEED;
+            y+=speed;
             break;
         case 3:
-            x-=SPEED;
+            x-=speed;
             break;
     }
 
@@ -116,6 +117,22 @@ void Snek::move() {
         cells.erase(cells.begin());
         cells.push_back(currentCell);
     }
+}
+
+void Snek::increaseTail() {
+    // First calculate the difference in the life variable
+    length++;
+    int oldLife = life;
+    life = (SPRITE_WIDTH / speed) * (length-1);
+    int deltaLife = life - oldLife;
+
+    // apply the difference to each segment
+    for (segment& seg: segments) {
+        seg.life += deltaLife;
+    }
+
+    // Now duplicate the the collision cell at the end of the snake
+    cells.insert(cells.begin(), *cells.begin());
 }
 
 void Snek::updateTail() {
@@ -129,7 +146,7 @@ void Snek::updateTail() {
     segment seg;
     seg.x = x;
     seg.y = y;
-    seg.life = LIFE;
+    seg.life = life;
     segments.push_back(seg);
 }
 
@@ -148,6 +165,10 @@ Snek::Snek(SDL_Renderer* renderer) {
     direction = 1;
     nextDirection = 1;
 
+    speed = 3;
+    length = 3;
+    life = (SPRITE_WIDTH / speed) * (length-1);
+
     Uint32 rmask = 0xff000000;
     Uint32 gmask = 0x00ff0000;
     Uint32 bmask = 0x0000ff00;
@@ -161,18 +182,18 @@ Snek::Snek(SDL_Renderer* renderer) {
     SDL_FillRect(debugSurface, &rect, SDL_MapRGBA(debugSurface->format, 0xEA, 0x5A, 0x53, 0x80));
     debugTexture = SDL_CreateTextureFromSurface(renderer, debugSurface);
 
-    for(int i = 0; i < LIFE*2/70+1; i++) {
+    for(int i = 0; i < length; i++) {
         cell currentCell;
-        currentCell.x = round(x/70.0)-LIFE*2/70-1+i;
+        currentCell.x = round(x/70.0)-life*speed/70-1+i;
         currentCell.y = round(y/70.0);
         cells.push_back(currentCell);
     }
 
-    for(int i = 0; i < LIFE*2; i++) {
+    for(int i = 0; i < life*speed; i++) {
         segment seg;
         seg.y = y;
-        seg.x = x-i*2;
-        seg.life = LIFE-i;
+        seg.x = x-i*speed;
+        seg.life = life-i;
         segments.push_back(seg);
     }
 }

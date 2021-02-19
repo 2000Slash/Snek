@@ -7,6 +7,7 @@ class Apple : public GameObject {
         SDL_Surface* appleSurface;
         int x, y;
     public:
+        void reposition();
         void render(SDL_Renderer *) override;
         void update() override;
         Apple(SDL_Renderer *, int, int);

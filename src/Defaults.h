@@ -2,6 +2,3 @@
 #define HEIGHT 720
 #define SPRITE_WIDTH 70
 #define SPRITE_HEIGHT 70
-#define SPEED 2
-#define LENGTH 5
-#define LIFE (SPRITE_WIDTH / SPEED) * (LENGTH-1)

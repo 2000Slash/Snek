@@ -2,11 +2,14 @@
 #include "GameObject.hpp"
 #include <vector>
 #include <tuple>
+#include "Defaults.h"
 
 class Snek : public GameObject {
     private:
         int x, y;
         int direction, nextDirection;
+        int life, length, speed;
+        bool debug = false;
         void renderSegment(int, int, SDL_Renderer*);
         void updateTail();
         void move();
@@ -25,6 +28,7 @@ class Snek : public GameObject {
         Snek(SDL_Renderer*);
         ~Snek();
         void update() override;
+        void increaseTail();
         void changeDirection(int);
         std::tuple<int, int> getCoords();
         void render(SDL_Renderer *) override;

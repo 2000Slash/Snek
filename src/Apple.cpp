@@ -14,6 +14,11 @@ void Apple::update() {
 
 }
 
+void Apple::reposition() {
+    x = rand() % 18;
+    y = rand() % 10;
+}
+
 Apple::Apple(SDL_Renderer* renderer, int pX, int pY) {
     appleSurface = IMG_Load("data/Apple.png");
     appleTexture = SDL_CreateTextureFromSurface(renderer, appleSurface);
