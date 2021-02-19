@@ -5,7 +5,7 @@
 class GameObject {
     public:
         virtual void render(SDL_Renderer *) = 0;
-        virtual void update() = 0;
+        virtual bool update() = 0;
         struct cell {
             int x, y;
             bool operator==(const cell& b) {

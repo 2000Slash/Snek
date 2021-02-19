@@ -6,4 +6,4 @@ project(Snek)
 # add the executable
 add_executable(Snek src/main.cpp src/Snek.cpp src/ObjectManager.cpp src/Apple.cpp)
 set(CMAKE_BUILD_TYPE Debug)
-target_link_libraries(Snek SDL2 SDL2_image)
+target_link_libraries(Snek SDL2 SDL2_image SDL2_ttf)

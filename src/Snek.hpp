@@ -27,7 +27,7 @@ class Snek : public GameObject {
         Snek(SDL_Renderer*);
         ~Snek();
         std::vector<cell> getCollisionCells();
-        void update() override;
+        bool update() override;
         void increaseTail();
         void changeDirection(int);
         std::tuple<int, int> getCoords();

@@ -10,8 +10,8 @@ void Apple::render(SDL_Renderer* renderer) {
     SDL_RenderCopy(renderer, appleTexture, NULL, &dstrect);
 }
 
-void Apple::update() {
-
+bool Apple::update() {
+    return true;
 }
 
 void Apple::reposition(std::vector<GameObject::cell> freeCells) {

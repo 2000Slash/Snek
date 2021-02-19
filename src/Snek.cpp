@@ -68,7 +68,7 @@ void Snek::renderSegment(int x, int y, SDL_Renderer* renderer) {
     SDL_RenderCopy(renderer, segmentTexture, NULL, &dstrect);
 }
 
-void Snek::update() {
+bool Snek::update() {
     // change direction if we are centered at a cell
     if (direction != nextDirection && x % 70 <= 5 && y % 70 <= 5) {
         direction = nextDirection;
@@ -77,7 +77,7 @@ void Snek::update() {
     }
     updateTail();
     move();
-    checkSelfCollision();
+    return checkSelfCollision();
 }
 
 bool Snek::checkSelfCollision() {
@@ -85,9 +85,6 @@ bool Snek::checkSelfCollision() {
     for(std::vector<cell>::iterator i = cells.begin(); i < cells.end()-1; i++) {
         cell c = *i;
         if (c.x == round(x/70.0) && c.y == round(y/70.0) ) {
-            SDL_Event event;
-            event.type = SDL_QUIT;
-            SDL_PushEvent(&event);
             return false;
         }
     }

@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>        
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include "Snek.hpp"
 #include <iostream>
 #include "ObjectManager.hpp"
@@ -16,6 +17,7 @@ void changeFolder() {
 SDL_Window* createWindow() { 
     SDL_Init(SDL_INIT_VIDEO);
     IMG_Init(IMG_INIT_PNG);
+    TTF_Init();
     return SDL_CreateWindow("Snek",SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, 0);
 }
 
@@ -30,6 +32,7 @@ int main(int argc, char **argv)
     
     SDL_Event event;
     bool quit = false;
+    bool update = true;
     double frameMs = 1000 / 60;
     while (!quit)
     {
@@ -47,10 +50,12 @@ int main(int argc, char **argv)
                     break;
             }
         }
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_SetRenderDrawColor(renderer, 101, 67, 33, 255);
         SDL_RenderClear(renderer);
         manager.render(renderer);
-        manager.update();
+        if(update) {
+            update = manager.update();
+        }
         SDL_RenderPresent(renderer);
         double endMs = SDL_GetTicks();
         double delayMs = frameMs - (endMs - startMs);
@@ -64,6 +69,7 @@ int main(int argc, char **argv)
  
     IMG_Quit();
     SDL_Quit();
+    TTF_Quit();
  
     return 0;
 }

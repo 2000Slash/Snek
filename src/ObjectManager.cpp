@@ -9,11 +9,31 @@ void ObjectManager::render(SDL_Renderer* renderer) {
     for(GameObject* object: gameObjects) {
         object->render(renderer);
     }
+    SDL_Rect rect;
+    rect.x = WIDTH/2-scoreW/2;
+    rect.y = HEIGHT-25;
+    rect.w = scoreW;
+    rect.h = scoreH;
+    SDL_RenderCopy(renderer, scoreTexture, NULL, &rect);
 }
 
-void ObjectManager::update() {
+void ObjectManager::addScore(SDL_Renderer* renderer) {
+    score++;
+    SDL_Color color = {255, 255, 255};
+    char scoreText[50];
+    sprintf(scoreText, "Score: %d", score);
+    SDL_Surface* scoreSurface = TTF_RenderText_Blended(scoreFont, scoreText, color);
+    scoreW = scoreSurface->w;
+    scoreH = scoreSurface->h;
+    scoreTexture = SDL_CreateTextureFromSurface(renderer, scoreSurface);
+    SDL_FreeSurface(scoreSurface);
+}
+
+bool ObjectManager::update() {
     for(GameObject* object: gameObjects) {
-        object->update();
+        if (object->update() == false) {
+            return false;
+        }
     }
 
     std::tuple<int, int> coords = snek->getCoords();
@@ -28,6 +48,7 @@ void ObjectManager::update() {
     }
 
     if(apple->getCoords() == snek->getCoords()) {
+        addScore(renderer);
         std::vector<GameObject::cell> snekCells = snek->getCollisionCells();
         std::vector<GameObject::cell> tmpCells(allCells);
 
@@ -37,11 +58,14 @@ void ObjectManager::update() {
         apple->reposition(tmpCells);
         snek->increaseTail();
     }
+    return true;
 }
 
 void ObjectManager::drawBackground(SDL_Renderer* renderer) {
     if (displayGrid) {
         drawGrid(renderer);
+    } else {
+        SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
     }
 }
 
@@ -81,10 +105,44 @@ void ObjectManager::addObject(GameObject* object) {
 }
 
 ObjectManager::ObjectManager(SDL_Renderer* renderer) {
+    this->renderer = renderer;
     snek = new Snek(renderer);
     apple = new Apple(renderer, 5, 5);
     addObject(apple);
     addObject(snek);
+
+    SDL_Color color = {255, 255, 255};
+    SDL_Surface* surface = SDL_CreateRGBSurface(0, WIDTH, HEIGHT, 32, 0, 0, 0, 255);
+
+    SDL_FillRect(surface, NULL, 0x654321);
+    scoreFont = TTF_OpenFont("data/OpenSans/OpenSans-SemiBold.ttf", 20);
+    if(!scoreFont) {
+        printf("TTF_OpenFont: %s\n", TTF_GetError());
+        // handle error
+    }
+    SDL_Surface* scoreSurface = TTF_RenderText_Blended(scoreFont, "Score: 0", color);
+    scoreW = scoreSurface->w;
+    scoreH = scoreSurface->h;
+    scoreTexture = SDL_CreateTextureFromSurface(renderer, scoreSurface);
+    SDL_FreeSurface(scoreSurface);
+
+
+    for(int x = 0; x < WIDTH/SPRITE_WIDTH; x++) {
+        for(int y = 0; y < HEIGHT/SPRITE_HEIGHT; y++) {
+            SDL_Rect rect;
+            rect.x = x*SPRITE_WIDTH;
+            rect.y = y*SPRITE_HEIGHT;
+            rect.w = SPRITE_WIDTH;
+            rect.h = SPRITE_HEIGHT;
+            if((x + y) % 2 == 0) {
+                SDL_FillRect(surface, &rect, primColor);
+            } else {
+                SDL_FillRect(surface, &rect, secColor);
+            }
+        }
+    }
+    backgroundTexture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
 
     int gridWidth = WIDTH/SPRITE_WIDTH;
     int gridHeight = HEIGHT/SPRITE_HEIGHT;
@@ -96,4 +154,10 @@ ObjectManager::ObjectManager(SDL_Renderer* renderer) {
             allCells.push_back(c);
         }
     }
+}
+
+ObjectManager::~ObjectManager() {
+    delete snek;
+    delete apple;
+    SDL_DestroyTexture(backgroundTexture);
 }

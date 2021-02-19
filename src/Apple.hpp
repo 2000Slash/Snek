@@ -10,7 +10,7 @@ class Apple : public GameObject {
     public:
         void reposition(std::vector<cell>);
         void render(SDL_Renderer *) override;
-        void update() override;
+        bool update() override;
         Apple(SDL_Renderer *, int, int);
         std::tuple<int, int> getCoords();
 };
